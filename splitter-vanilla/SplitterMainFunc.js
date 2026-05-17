@@ -413,6 +413,12 @@ function addExpense() {
   if (isNaN(amount) || amount <= 0) { showExpenseError('Enter a valid amount.'); return }
   if (!payer)             { showExpenseError('Select who paid.');         return }
 
+  if (state.paidSettlements.length > 0) {
+    const ok = confirm('Adding an expense will reset all marked-as-paid settlements since the amounts will change. Continue?')
+    if (!ok) return
+    state.paidSettlements = []
+  }
+
   state.expenses.push({ id: state.nextId++, desc, amount, payer, category: finalCategory })
   document.getElementById('exp-desc').value   = ''
   document.getElementById('exp-amount').value = ''
@@ -439,6 +445,11 @@ function showExpenseError(msg) {
 }
 
 function deleteExpense(id) {
+  if (state.paidSettlements.length > 0) {
+    const ok = confirm('Deleting an expense will reset all marked-as-paid settlements. Continue?')
+    if (!ok) return
+    state.paidSettlements = []
+  }
   state.expenses = state.expenses.filter(e => e.id !== id)
   saveState()
   renderAll()
