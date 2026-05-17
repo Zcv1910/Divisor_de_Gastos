@@ -300,3 +300,43 @@ select option { background: var(--surface2); }
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
+
+/* Modal */
+#modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal {
+  background: var(--surface);
+  border: 0.5px solid var(--border2);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  max-width: 320px;
+  width: 90%;
+}
+
+.modal-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.modal-msg {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+  line-height: 1.5;
+}
+
+.modal-btns {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}

@@ -185,6 +185,17 @@
   </div>
 </div>
 
+<!-- Warning Modal -->
+<div id="modal-overlay" style="display:none" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <p class="modal-title" id="modal-title">Are you sure?</p>
+    <p class="modal-msg" id="modal-msg"></p>
+    <div class="modal-btns">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-accent" id="modal-confirm">Continue</button>
+    </div>
+  </div>
+</div>
 <script src="SplitterMainFunc.js"></script>
 </body>
 </html>

@@ -403,9 +403,22 @@ function addExpense() {
   const category = document.getElementById('exp-cate').value
 
   // incase they choose "Others" from exp-cate
-  let finalCategory = category  // start with whatever was selected
-  if (category === 'Others') {
-    finalCategory = document.getElementById('Other-Option').value.trim() || 'Other'
+  if (state.paidSettlements.length > 0) {
+    showModal(
+      'Reset paid settlements?',
+      'Adding an expense will reset all marked-as-paid settlements since the amounts will change.',
+      () => {
+        state.paidSettlements = []
+        state.expenses.push({ id: state.nextId++, desc, amount, payer, category: finalCategory })
+        document.getElementById('exp-desc').value  = ''
+        document.getElementById('exp-amount').value = ''
+        document.getElementById('exp-cate').value  = 'Tickets'
+        errEl.style.display = 'none'
+        saveState()
+        renderAll()
+      }
+    )
+    return
   }
 
   // add description of people the user owns
@@ -446,9 +459,17 @@ function showExpenseError(msg) {
 
 function deleteExpense(id) {
   if (state.paidSettlements.length > 0) {
-    const ok = confirm('Deleting an expense will reset all marked-as-paid settlements. Continue?')
-    if (!ok) return
-    state.paidSettlements = []
+    showModal(
+      'Reset paid settlements?',
+      'Deleting an expense will reset all marked-as-paid settlements since the amounts will change.',
+      () => {
+        state.paidSettlements = []
+        state.expenses = state.expenses.filter(e => e.id !== id)
+        saveState()
+        renderAll()
+      }
+    )
+    return
   }
   state.expenses = state.expenses.filter(e => e.id !== id)
   saveState()
@@ -456,18 +477,24 @@ function deleteExpense(id) {
 }
 
 function resetAll() {
-  if (!confirm('Reset everything? This clears all members and expenses.')) return
-  state = {
-    GroupName: '',
-    members: [],
-    expenses: [],
-    paidSettlements: [],
-    Payment_cat: '',
-    nextId: 1,
-  }
-  saveState()
-  renderAll()
+  showModal(
+    'Reset everything?',
+    'This will clear all members, expenses, and settlements. This cannot be undone.',
+    () => {
+      state = {
+        GroupName: '',
+        members: [],
+        expenses: [],
+        paidSettlements: [],
+        Payment_cat: '',
+        nextId: 1,
+      }
+      saveState()
+      renderAll()
+    }
+  )
 }
+
 function markAsPaid(from, to, amount) {
 
   const payment = { from, to, amount }
@@ -536,7 +563,19 @@ function exportToCsv() {
 
 }
 
+function showModal(title, msg, onConfirm) {
+  document.getElementById('modal-title').textContent = title
+  document.getElementById('modal-msg').textContent = msg
+  document.getElementById('modal-overlay').style.display = 'flex'
+  document.getElementById('modal-confirm').onclick = () => {
+    closeModal()
+    onConfirm()
+  }
+}
 
+function closeModal() {
+  document.getElementById('modal-overlay').style.display = 'none'
+}
 // ─── Tab switching ────────────────────────────────────────────────────────
 
 function switchTab(name, btn) {
