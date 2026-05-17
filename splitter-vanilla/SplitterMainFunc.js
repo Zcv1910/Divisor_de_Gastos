@@ -413,6 +413,16 @@ function addExpense() {
   if (isNaN(amount) || amount <= 0) { showExpenseError('Enter a valid amount.');  return }
   if (!payer)                       { showExpenseError('Select who paid.');        return }
 
+  // Helper to reset the form
+  function resetForm() {
+    document.getElementById('exp-desc').value             = ''
+    document.getElementById('exp-amount').value           = ''
+    document.getElementById('exp-cate').value             = 'Tickets'
+    document.getElementById('Other-Option').style.display = 'none'
+    document.getElementById('Other-Option').value         = ''
+    errEl.style.display = 'none'
+  }
+
   // Warn about paid settlements being reset
   if (state.paidSettlements.length > 0) {
     showModal(
@@ -421,10 +431,7 @@ function addExpense() {
       () => {
         state.paidSettlements = []
         state.expenses.push({ id: state.nextId++, desc, amount, payer, category: finalCategory })
-        document.getElementById('exp-desc').value   = ''
-        document.getElementById('exp-amount').value = ''
-        document.getElementById('exp-cate').value   = 'Tickets'
-        errEl.style.display = 'none'
+        resetForm()
         saveState()
         renderAll()
       }
@@ -432,30 +439,11 @@ function addExpense() {
     return
   }
 
-  // No paid settlements — just add directly
+  // No paid settlements — add directly
   state.expenses.push({ id: state.nextId++, desc, amount, payer, category: finalCategory })
-  document.getElementById('exp-desc').value   = ''
-  document.getElementById('exp-amount').value = ''
-  document.getElementById('exp-cate').value   = 'Tickets'
-  errEl.style.display = 'none'
+  resetForm()
   saveState()
   renderAll()
-}
-
-function toggleOtherOption() {
-  const other = document.getElementById('Other-Option')
-  if (document.getElementById('exp-cate').value === 'Others') {
-    other.style.display = 'block'
-  } else {
-    other.style.display = 'none'
-    other.value = ''
-  }
-}
-
-function showExpenseError(msg) {
-  const el = document.getElementById('exp-error')
-  el.textContent = msg
-  el.style.display = 'block'
 }
 
 function deleteExpense(id) {
