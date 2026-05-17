@@ -494,6 +494,16 @@ function markAsPaid(from, to, amount) {
   renderAll()
 }
 
+function toggleOtherOption() {
+  const other = document.getElementById('Other-Option')
+  if (document.getElementById('exp-cate').value === 'Others') {
+    other.style.display = 'block'
+  } else {
+    other.style.display = 'none'
+    other.value = ''
+  }
+}
+
 function exportToCsv() {
   // summary
   const total = state.expenses.reduce((s, e) => s + e.amount, 0)
