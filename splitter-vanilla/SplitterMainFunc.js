@@ -396,13 +396,24 @@ function removeMember(name) {
 }
 
 function addExpense() {
-  const desc   = document.getElementById('exp-desc').value.trim()
-  const amount = parseFloat(document.getElementById('exp-amount').value)
-  const payer  = document.getElementById('exp-payer').value
-  const errEl  = document.getElementById('exp-error')
+  const desc     = document.getElementById('exp-desc').value.trim()
+  const amount   = parseFloat(document.getElementById('exp-amount').value)
+  const payer    = document.getElementById('exp-payer').value
+  const errEl    = document.getElementById('exp-error')
   const category = document.getElementById('exp-cate').value
 
-  // incase they choose "Others" from exp-cate
+  // Handle "Others" custom category
+  let finalCategory = category
+  if (category === 'Others') {
+    finalCategory = document.getElementById('Other-Option').value.trim() || 'Other'
+  }
+
+  // Validate first — before anything else
+  if (!desc)                        { showExpenseError('Add a description.');     return }
+  if (isNaN(amount) || amount <= 0) { showExpenseError('Enter a valid amount.');  return }
+  if (!payer)                       { showExpenseError('Select who paid.');        return }
+
+  // Warn about paid settlements being reset
   if (state.paidSettlements.length > 0) {
     showModal(
       'Reset paid settlements?',
@@ -410,9 +421,9 @@ function addExpense() {
       () => {
         state.paidSettlements = []
         state.expenses.push({ id: state.nextId++, desc, amount, payer, category: finalCategory })
-        document.getElementById('exp-desc').value  = ''
+        document.getElementById('exp-desc').value   = ''
         document.getElementById('exp-amount').value = ''
-        document.getElementById('exp-cate').value  = 'Tickets'
+        document.getElementById('exp-cate').value   = 'Tickets'
         errEl.style.display = 'none'
         saveState()
         renderAll()
@@ -421,21 +432,11 @@ function addExpense() {
     return
   }
 
-  // add description of people the user owns
-  if (!desc)              { showExpenseError('Add a description.');      return }
-  if (isNaN(amount) || amount <= 0) { showExpenseError('Enter a valid amount.'); return }
-  if (!payer)             { showExpenseError('Select who paid.');         return }
-
-  if (state.paidSettlements.length > 0) {
-    const ok = confirm('Adding an expense will reset all marked-as-paid settlements since the amounts will change. Continue?')
-    if (!ok) return
-    state.paidSettlements = []
-  }
-
+  // No paid settlements — just add directly
   state.expenses.push({ id: state.nextId++, desc, amount, payer, category: finalCategory })
   document.getElementById('exp-desc').value   = ''
   document.getElementById('exp-amount').value = ''
-  document.getElementById('exp-cate').value = 'Tickets'
+  document.getElementById('exp-cate').value   = 'Tickets'
   errEl.style.display = 'none'
   saveState()
   renderAll()
