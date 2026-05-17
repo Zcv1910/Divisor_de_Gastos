@@ -98,6 +98,25 @@ select option { background: var(--surface2); }
 }
 .btn-ghost:hover { background: rgba(200,241,53,0.2); }
 
+.btn-paid {
+  height: 28px;
+  padding: 0 10px;
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: 999px;
+  background: var(--accent-dim);
+  color: var(--accent);
+  border: 0.5px solid rgba(200,241,53,0.25);
+  cursor: pointer;
+  font-family: var(--font);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.btn-paid:hover {
+  background: rgba(200,241,53,0.2);
+}
+
 /* Members */
 .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
 .chip {
@@ -195,11 +214,11 @@ select option { background: var(--surface2); }
   .settle-amt {
     margin-left: 0;
   }
-
+/* 
   .settle-row .btn {
     width: 100%;
     margin-top: 4px;
-  }
+  } */
 }
 
 /* Expense rows */

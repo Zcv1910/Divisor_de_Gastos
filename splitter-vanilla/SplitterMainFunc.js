@@ -341,7 +341,7 @@ function renderSettle() {
         ${avatarHTML(t.to, 34)}
         <span class="settle-amt">RM ${t.amount.toFixed(2)}</span>
         <button class="btn" onclick="markAsPaid('${escAttr(t.from)}', '${escAttr(t.to)}', ${t.amount})">
-          Mark as paid
+          Mark paid
         </button>
       </div>`
   }).join('') + `<p class="settle-note">Minimum transactions needed to settle all debts.</p>`
