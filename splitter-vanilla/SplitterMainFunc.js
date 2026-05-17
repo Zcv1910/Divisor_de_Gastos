@@ -395,6 +395,30 @@ function removeMember(name) {
   renderAll()
 }
 
+function clearExpenseForm() {
+  const desc = document.getElementById('exp-desc')
+  const amount = document.getElementById('exp-amount')
+  const cate = document.getElementById('exp-cate')
+  const other = document.getElementById('Other-Option')
+  const errEl = document.getElementById('exp-error')
+  if (desc) desc.value = ''
+  if (amount) amount.value = ''
+  if (cate) cate.value = 'Tickets'
+  if (other) {
+    other.style.display = 'none'
+    other.value = ''
+  }
+  if (errEl) errEl.style.display = 'none'
+}
+
+function clearAllInputs() {
+  clearExpenseForm()
+  const memberInput = document.getElementById('member-input')
+  const memberErr = document.getElementById('member-error')
+  if (memberInput) memberInput.value = ''
+  if (memberErr) memberErr.style.display = 'none'
+}
+
 function addExpense() {
   const desc     = document.getElementById('exp-desc').value.trim()
   const amount   = parseFloat(document.getElementById('exp-amount').value)
@@ -413,16 +437,6 @@ function addExpense() {
   if (isNaN(amount) || amount <= 0) { showExpenseError('Enter a valid amount.');  return }
   if (!payer)                       { showExpenseError('Select who paid.');        return }
 
-  // Helper to reset the form
-  function resetForm() {
-    document.getElementById('exp-desc').value             = ''
-    document.getElementById('exp-amount').value           = ''
-    document.getElementById('exp-cate').value             = 'Tickets'
-    document.getElementById('Other-Option').style.display = 'none'
-    document.getElementById('Other-Option').value         = ''
-    errEl.style.display = 'none'
-  }
-
   // Warn about paid settlements being reset
   if (state.paidSettlements.length > 0) {
     showModal(
@@ -431,7 +445,7 @@ function addExpense() {
       () => {
         state.paidSettlements = []
         state.expenses.push({ id: state.nextId++, desc, amount, payer, category: finalCategory })
-        resetForm()
+        clearExpenseForm()
         saveState()
         renderAll()
       }
@@ -441,7 +455,7 @@ function addExpense() {
 
   // No paid settlements — add directly
   state.expenses.push({ id: state.nextId++, desc, amount, payer, category: finalCategory })
-  resetForm()
+  clearExpenseForm()
   saveState()
   renderAll()
 }
@@ -475,9 +489,9 @@ function resetAll() {
         members: [],
         expenses: [],
         paidSettlements: [],
-        Payment_cat: '',
         nextId: 1,
       }
+      clearAllInputs()
       saveState()
       renderAll()
     }
