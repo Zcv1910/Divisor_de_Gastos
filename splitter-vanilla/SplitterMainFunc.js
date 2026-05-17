@@ -568,7 +568,13 @@ function showModal(title, msg, onConfirm) {
   document.getElementById('modal-title').textContent = title
   document.getElementById('modal-msg').textContent = msg
   document.getElementById('modal-overlay').style.display = 'flex'
-  document.getElementById('modal-confirm').onclick = () => {
+
+  // Clone the button to remove any previously attached onclick listeners
+  const oldBtn = document.getElementById('modal-confirm')
+  const newBtn = oldBtn.cloneNode(true)
+  oldBtn.parentNode.replaceChild(newBtn, oldBtn)
+
+  newBtn.onclick = () => {
     closeModal()
     onConfirm()
   }
