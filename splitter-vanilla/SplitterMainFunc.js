@@ -21,8 +21,12 @@ const CATE_COLORS = {
 }
 
 function paletteFor(name) {
-  const idx = state.members.indexOf(name)
-  return PALETTES[Math.max(0, idx) % PALETTES.length]
+  let hash = 0
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash)
+  }
+  const idx = Math.abs(hash) % PALETTES.length
+  return PALETTES[idx]
 }
 
 function avatarHTML(name, size = 32) {
