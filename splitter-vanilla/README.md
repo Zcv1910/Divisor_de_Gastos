@@ -1,4 +1,4 @@
-# SplitEase — Expense Splitter (Vanilla JS)
+# Divisor de Gastos — Expense Splitter (Vanilla JS)
 
 A clean expense splitter built with plain HTML, CSS, and JavaScript. No frameworks, no installs, no build step.
 
